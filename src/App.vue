@@ -1,248 +1,290 @@
 <template>
   <div id="app">
-    <snowflake />
-    <nav class="nav-bar">
-      <div class="nav-container">
-        <router-link to="/" class="logo">我的博客园</router-link>
-        <div class="nav-links">
-          <div class="nav-link-container">
-            <router-link to="/" class="nav-link" exact>
-              <span>首页</span>
-              <div class="link-line"></div>
-            </router-link>
-            <router-link to="/articles" class="nav-link">
-              <span>技术文章</span>
-              <div class="link-line"></div>
-            </router-link>
-            <router-link to="/projects" class="nav-link">
-              <span>项目展示</span>
-              <div class="link-line"></div>
-            </router-link>
-            <router-link to="/notes" class="nav-link">
-              <span>学习笔记</span>
-              <div class="link-line"></div>
-            </router-link>
-            <router-link to="/resources" class="nav-link">
-              <span>资源分享</span>
-              <div class="link-line"></div>
-            </router-link>
-            <router-link to="/about" class="nav-link">
-              <span>关于我</span>
-              <div class="link-line"></div>
-            </router-link>
-          </div>
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <router-link to="/">
+            <i class="el-icon-s-home"></i>
+            <span class="site-name">云深小站</span>
+          </router-link>
         </div>
+
+        <!-- 移动端菜单按钮 -->
+        <button class="menu-toggle" @click="toggleMenu">
+          <i :class="['el-icon-s-fold', { 'is-active': isMenuOpen }]"></i>
+        </button>
+
+        <!-- 导航菜单 -->
+        <nav :class="['nav-menu', { 'is-open': isMenuOpen }]">
+          <router-link 
+            v-for="item in menuItems" 
+            :key="item.path"
+            :to="item.path"
+            class="nav-item"
+            :exact="item.path === '/'"
+            @click.native="closeMenu"
+          >
+            <i :class="item.icon"></i>
+            <span>{{ item.name }}</span>
+          </router-link>
+        </nav>
       </div>
-    </nav>
+    </header>
+
     <main class="main-content">
-      <router-view v-slot="{ Component }">
-        <transition name="fade" mode="out-in">
-          <component :is="Component" />
-        </transition>
-      </router-view>
+      <router-view></router-view>
+      <chat-bot />
     </main>
-    <chat-bot />
   </div>
 </template>
 
 <script>
-import Snowflake from './components/Snowflake.vue'
 import ChatBot from './components/ChatBot.vue'
 
 export default {
   name: 'App',
   components: {
-    Snowflake,
     ChatBot
+  },
+  data() {
+    return {
+      isMenuOpen: false,
+      menuItems: [
+        { path: '/', name: '首页', icon: 'el-icon-s-home', exact: true },
+        { path: '/articles', name: '文章', icon: 'el-icon-document' },
+        { path: '/projects', name: '项目', icon: 'el-icon-folder' },
+        { path: '/notes', name: '笔记', icon: 'el-icon-notebook-1' },
+        { path: '/resources', name: '资源', icon: 'el-icon-collection' },
+        { path: '/about', name: '关于', icon: 'el-icon-user' }
+      ]
+    }
+  },
+  methods: {
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen
+      document.body.style.overflow = this.isMenuOpen ? 'hidden' : ''
+    },
+    closeMenu() {
+      this.isMenuOpen = false
+      document.body.style.overflow = ''
+    }
+  },
+  watch: {
+    '$route'() {
+      this.closeMenu()
+    }
   }
 }
 </script>
 
 <style>
+:root {
+  --header-height: 60px;
+  --mobile-header-height: 50px;
+}
+
 #app {
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  background: var(--bg-gradient);
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.nav-bar {
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+.header {
   position: fixed;
-  width: 100%;
   top: 0;
-  z-index: 1000;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  background: var(--bg-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 100;
 }
 
-.nav-container {
+.header-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 15px 20px;
+  padding: 0 20px;
+  height: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
 .logo {
   font-size: 1.5em;
   font-weight: bold;
+}
+
+.logo a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: var(--primary-color);
   text-decoration: none;
-  transition: color 0.3s ease;
 }
 
-.logo:hover {
-  color: var(--primary-dark);
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--primary-color);
+  cursor: pointer;
+  padding: 8px;
 }
 
-.nav-links {
+.nav-menu {
   display: flex;
   gap: 20px;
 }
 
-.nav-link-container {
-  position: relative;
+.nav-item {
   display: flex;
-  gap: 30px;
-  justify-content: flex-start;
-  width: 600px;
-  padding: 0 10px;
-}
-
-.nav-link {
-  text-decoration: none;
-  color: var(--text-secondary);
-  padding: 8px 16px;
-  transition: all 0.3s ease;
-  position: relative;
-  white-space: nowrap;
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  border-radius: 20px;
-}
-
-.nav-link span {
-  margin-bottom: 5px;
-  position: relative;
-  z-index: 1;
-}
-
-.nav-link::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--primary-color);
-  border-radius: 20px;
-  opacity: 0;
-  transform: scale(0.8);
+  gap: 6px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 6px;
   transition: all 0.3s ease;
 }
 
-.nav-link:hover::before {
-  opacity: 0.1;
-  transform: scale(1);
-}
-
-.nav-link.router-link-active::before {
-  opacity: 0.15;
-  transform: scale(1);
-}
-
-.link-line {
-  height: 3px;
-  width: 0;
-  background: var(--primary-color);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 3px;
-  opacity: 0;
-  position: relative;
-  z-index: 1;
-}
-
-.nav-link:hover .link-line {
-  width: 30px;
-  opacity: 1;
-}
-
-.nav-link.router-link-active .link-line {
-  width: calc(100% - 20px);
-  opacity: 1;
-  background: var(--primary-color);
-  box-shadow: 0 0 12px var(--primary-light);
-}
-
-.nav-link:hover {
+.nav-item:hover {
   color: var(--primary-color);
-  transform: translateY(-2px);
+  background: var(--bg-secondary);
 }
 
-.nav-link.router-link-active {
-  color: var(--primary-color);
+.nav-item.router-link-active {
+  color: #000;
   font-weight: 600;
-  transform: translateY(-2px);
-}
-
-@keyframes glow {
-  0% {
-    box-shadow: 0 0 5px var(--primary-light);
-  }
-  50% {
-    box-shadow: 0 0 15px var(--primary-color);
-  }
-  100% {
-    box-shadow: 0 0 5px var(--primary-light);
-  }
-}
-
-.nav-link.router-link-active .link-line {
-  animation: glow 2s ease-in-out infinite;
-}
-
-.nav-link:active {
-  transform: scale(0.95) translateY(-2px);
+  background: var(--bg-secondary);
 }
 
 .main-content {
-  margin-top: 80px;
+  margin-top: var(--header-height);
+  flex: 1;
   padding: 20px;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
+  background: var(--bg-secondary);
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.fade-enter-from {
-  opacity: 0;
-  transform: translateX(20px);
-}
-
-.fade-leave-to {
-  opacity: 0;
-  transform: translateX(-20px);
-}
-
+/* 移动端适配 */
 @media (max-width: 768px) {
-  .nav-link-container {
+  .header {
+    height: var(--mobile-header-height);
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .main-content {
+    margin-top: var(--mobile-header-height);
+    padding: 15px;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .site-name {
+    font-size: 0.9em;
+  }
+
+  .nav-menu {
+    position: fixed;
+    top: var(--mobile-header-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: white;
+    flex-direction: column;
+    padding: 20px;
+    gap: 15px;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 99;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+  }
+
+  .nav-menu.is-open {
+    transform: translateX(0);
+  }
+
+  .nav-item {
+    padding: 15px;
+    font-size: 1.1em;
+    border-radius: 8px;
+    background: #f8f9fa;
     width: 100%;
-    overflow-x: auto;
-    padding-bottom: 5px;
+    justify-content: flex-start;
   }
-  
-  .nav-link {
-    padding: 8px 8px;
+
+  .nav-item i {
+    margin-right: 10px;
+    font-size: 1.2em;
+    width: 24px;
+    text-align: center;
   }
-  
-  .link-line {
-    display: none;
+
+  .nav-item:hover {
+    background: #f0f0f0;
+    color: #000;
+  }
+
+  .nav-item.router-link-active {
+    background: #f0f0f0;
+    color: #000;
+    font-weight: 700;
+  }
+
+  .menu-toggle .el-icon-s-fold {
+    transition: transform 0.3s ease;
+    font-size: 24px;
+  }
+
+  .menu-toggle .el-icon-s-fold.is-active {
+    transform: rotate(180deg);
+  }
+}
+
+/* 暗色模式支持 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #242424;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+  }
+
+  .nav-item.router-link-active {
+    color: #fff;
+    font-weight: 600;
+    background: var(--primary-color);
+  }
+
+  @media (max-width: 768px) {
+    .header {
+      background: #1a1a1a;
+    }
+
+    .nav-menu {
+      background: #1a1a1a;
+    }
+
+    .nav-item {
+      background: #242424;
+      color: #cccccc;
+    }
+
+    .nav-item:hover {
+      background: #2c2c2c;
+      color: #fff;
+    }
+
+    .nav-item.router-link-active {
+      background: #2c2c2c;
+      color: #fff;
+      font-weight: 700;
+    }
   }
 }
 </style> 

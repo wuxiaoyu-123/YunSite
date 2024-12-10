@@ -2,8 +2,8 @@
   <div class="carousel">
     <div class="carousel-container" :style="containerStyle">
       <div 
-        v-for="(item, index) in visibleItems" 
-        :key="item.id" 
+        v-for="(item, index) in carouselItems" 
+        :key="index" 
         class="carousel-item"
         :class="{ active: currentIndex === index }"
       >
@@ -29,8 +29,8 @@
     
     <div class="carousel-indicators">
       <span 
-        v-for="(item, index) in items" 
-        :key="item.id"
+        v-for="(_, index) in carouselItems" 
+        :key="index"
         :class="['indicator', { active: currentIndex === index }]"
         @click="goTo(index)"
       ></span>
@@ -41,28 +41,29 @@
 <script>
 export default {
   name: 'ImageCarousel',
-  props: {
-    items: {
-      type: Array,
-      required: true,
-      validator: function(value) {
-        return value.every(item => item.id && item.image && item.title)
-      }
-    },
-    interval: {
-      type: Number,
-      default: 5000
-    },
-    autoplay: {
-      type: Boolean,
-      default: true
-    }
-  },
   data() {
     return {
       currentIndex: 0,
       timer: null,
-      isTransitioning: false
+      isTransitioning: false,
+      carouselItems: [
+        {
+          title: '风景图片1',
+          image: 'https://picsum.photos/1200/500?random=1'
+        },
+        {
+          title: '风景图片2',
+          image: 'https://picsum.photos/1200/500?random=2'
+        },
+        {
+          title: '风景图片3',
+          image: 'https://picsum.photos/1200/500?random=3'
+        },
+        {
+          title: '风景图片4',
+          image: 'https://picsum.photos/1200/500?random=4'
+        }
+      ]
     }
   },
   computed: {
@@ -71,33 +72,20 @@ export default {
         transform: `translateX(-${this.currentIndex * 100}%)`,
         transition: this.isTransitioning ? 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)' : 'none'
       }
-    },
-    visibleItems() {
-      // 只保留当前、前一个和后一个图片
-      const items = [...this.items]
-      const currentIndex = this.currentIndex
-      const prevIndex = (currentIndex - 1 + items.length) % items.length
-      const nextIndex = (currentIndex + 1) % items.length
-      
-      return [
-        items[prevIndex],
-        items[currentIndex],
-        items[nextIndex]
-      ]
     }
   },
   methods: {
     next() {
       if (this.isTransitioning) return
       this.isTransitioning = true
-      this.currentIndex = (this.currentIndex + 1) % this.items.length
+      this.currentIndex = (this.currentIndex + 1) % this.carouselItems.length
       this.resetTransition()
     },
     prev() {
       if (this.isTransitioning) return
       this.isTransitioning = true
       this.currentIndex = this.currentIndex === 0 
-        ? this.items.length - 1 
+        ? this.carouselItems.length - 1 
         : this.currentIndex - 1
       this.resetTransition()
     },
@@ -113,8 +101,8 @@ export default {
       }, 500)
     },
     startTimer() {
-      if (this.autoplay && !this.timer) {
-        this.timer = setInterval(this.next, this.interval)
+      if (!this.timer) {
+        this.timer = setInterval(this.next, 5000)
       }
     },
     stopTimer() {
@@ -122,32 +110,13 @@ export default {
         clearInterval(this.timer)
         this.timer = null
       }
-    },
-    handleVisibilityChange() {
-      if (document.hidden) {
-        this.stopTimer()
-      } else {
-        this.startTimer()
-      }
     }
   },
   mounted() {
     this.startTimer()
-    document.addEventListener('visibilitychange', this.handleVisibilityChange)
   },
   beforeDestroy() {
     this.stopTimer()
-    document.removeEventListener('visibilitychange', this.handleVisibilityChange)
-  },
-  watch: {
-    items: {
-      handler(newItems) {
-        if (this.currentIndex >= newItems.length) {
-          this.currentIndex = 0
-        }
-      },
-      immediate: true
-    }
   }
 }
 </script>
@@ -160,7 +129,6 @@ export default {
   border-radius: 15px;
   overflow: hidden;
   box-shadow: var(--card-shadow);
-  background: #f5f5f5;
 }
 
 .carousel-container {
@@ -174,25 +142,13 @@ export default {
   flex: 0 0 100%;
   height: 100%;
   overflow: hidden;
-  opacity: 0.7;
-  transition: opacity 0.5s ease;
-}
-
-.carousel-item.active {
-  opacity: 1;
 }
 
 .carousel-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.02);
   transition: transform 0.5s ease;
-  will-change: transform;
-}
-
-.carousel-item.active img {
-  transform: scale(1);
 }
 
 .carousel-caption {
@@ -215,14 +171,6 @@ export default {
   font-weight: 600;
   margin: 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  transform: translateY(20px);
-  opacity: 0;
-  transition: all 0.5s ease;
-}
-
-.carousel-item.active .carousel-caption h3 {
-  transform: translateY(0);
-  opacity: 1;
 }
 
 .control-btn {
@@ -251,10 +199,6 @@ export default {
   background: white;
   transform: translateY(-50%) scale(1.1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.control-btn:active {
-  transform: translateY(-50%) scale(0.95);
 }
 
 .prev { left: 20px; }
