@@ -1,0 +1,42 @@
+:root {
+  /* 主色调 - 深邃的蓝色系 */
+  --primary-color: #1a73e8;
+  --primary-light: #4285f4;
+  --primary-dark: #0d47a1;
+  
+  /* 辅助色 - 活力橙色系 */
+  --secondary-color: #ff7043;
+  --secondary-light: #ff9e80;
+  --secondary-dark: #f4511e;
+  
+  /* 强调色 - 生机绿色系 */
+  --accent-color: #00c853;
+  --accent-light: #69f0ae;
+  --accent-dark: #00a045;
+  
+  /* 中性色 - 优雅的灰度层次 */
+  --text-primary: #1a1a1a;
+  --text-secondary: #424242;
+  --text-light: #757575;
+  
+  /* 背景色 - 清新渐变 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+  
+  /* 卡片阴影 - 立体感 */
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  
+  /* 装饰色 - 功能色系 */
+  --success-color: #00c853;
+  --warning-color: #ffd600;
+  --error-color: #ff3d00;
+  --info-color: #00b0ff;
+  
+  /* 轮播图相关 */
+  --carousel-overlay: rgba(0, 0, 0, 0.4);
+  --carousel-text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  --carousel-control-bg: rgba(255, 255, 255, 0.9);
+  --carousel-indicator-bg: rgba(255, 255, 255, 0.3);
+} 
