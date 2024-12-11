@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{ 'dark-theme': isDarkMode }">
     <header class="header">
       <div class="header-content">
         <div class="logo">
@@ -32,30 +32,77 @@
     </header>
 
     <main class="main-content">
-      <router-view></router-view>
+      <transition name="fade" mode="out-in">
+        <router-view></router-view>
+      </transition>
       <chat-bot />
+      <back-to-top :isDarkMode="isDarkMode" />
+      <theme-toggle @theme-change="handleThemeChange" />
     </main>
+
+    <!-- 加载动画 -->
+    <div class="loading-overlay" v-if="isLoading">
+      <div class="loading-spinner">
+        <i class="el-icon-loading"></i>
+        <span>加载中...</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import ChatBot from './components/ChatBot.vue'
+import BackToTop from './components/BackToTop.vue'
+import ThemeToggle from './components/ThemeToggle.vue'
 
 export default {
   name: 'App',
   components: {
-    ChatBot
+    ChatBot,
+    BackToTop,
+    ThemeToggle
   },
   data() {
     return {
       isMenuOpen: false,
+      isDarkMode: false,
+      isLoading: false,
       menuItems: [
-        { path: '/', name: '首页', icon: 'el-icon-s-home', exact: true },
-        { path: '/articles', name: '文章', icon: 'el-icon-document' },
-        { path: '/projects', name: '项目', icon: 'el-icon-folder' },
-        { path: '/notes', name: '笔记', icon: 'el-icon-notebook-1' },
-        { path: '/resources', name: '资源', icon: 'el-icon-collection' },
-        { path: '/about', name: '关于', icon: 'el-icon-user' }
+        {
+          path: '/',
+          name: '首页',
+          icon: 'el-icon-s-home'
+        },
+        {
+          path: '/articles',
+          name: '文章',
+          icon: 'el-icon-document'
+        },
+        {
+          path: '/projects',
+          name: '项目',
+          icon: 'el-icon-folder'
+        },
+        {
+          path: '/notes',
+          name: '笔记',
+          icon: 'el-icon-notebook-1'
+        },
+        {
+          path: '/links',
+          name: '友链',
+          icon: 'el-icon-link'
+        },
+        {
+          path: '/timeline',
+          name: '时间线',
+          icon: 'el-icon-time'
+        },
+        {
+          path: '/about',
+          name: '关于',
+          icon: 'el-icon-user'
+        }
       ]
     }
   },
@@ -67,17 +114,26 @@ export default {
     closeMenu() {
       this.isMenuOpen = false
       document.body.style.overflow = ''
+    },
+    handleThemeChange(isDark) {
+      this.isDarkMode = isDark
     }
   },
   watch: {
     '$route'() {
       this.closeMenu()
+      this.isLoading = true
+      setTimeout(() => {
+        this.isLoading = false
+      }, 500)
     }
   }
 }
 </script>
 
 <style>
+@import './assets/styles/variables.css';
+
 :root {
   --header-height: 60px;
   --mobile-header-height: 50px;
@@ -96,8 +152,8 @@ export default {
   left: 0;
   right: 0;
   height: var(--header-height);
-  background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: var(--bg-primary);
+  box-shadow: var(--card-shadow);
   z-index: 1000;
 }
 
@@ -176,7 +232,6 @@ export default {
 @media (max-width: 768px) {
   .header {
     height: var(--mobile-header-height);
-    background: white;
   }
 
   .main-content {
@@ -198,7 +253,7 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    background: white;
+    background: var(--bg-primary);
     flex-direction: column;
     padding: 20px;
     gap: 15px;
@@ -250,45 +305,60 @@ export default {
   }
 }
 
-/* 暗色模式支持 */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-primary: #1a1a1a;
-    --bg-secondary: #242424;
-    --text-primary: #ffffff;
-    --text-secondary: #cccccc;
+/* 添加过渡动画 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* 加载动画样式 */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.loading-spinner {
+  text-align: center;
+  color: var(--primary-color);
+}
+
+.loading-spinner i {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.loading-spinner span {
+  display: block;
+  color: var(--text-secondary);
+}
+
+/* 深色模式适配 */
+.dark-theme {
+  .header {
+    background: var(--bg-primary);
   }
 
+  .nav-item {
+    color: var(--text-secondary);
+  }
+
+  .nav-item:hover,
   .nav-item.router-link-active {
-    color: #fff;
-    font-weight: 600;
-    background: var(--primary-color);
-  }
-
-  @media (max-width: 768px) {
-    .header {
-      background: #1a1a1a;
-    }
-
-    .nav-menu {
-      background: #1a1a1a;
-    }
-
-    .nav-item {
-      background: #242424;
-      color: #cccccc;
-    }
-
-    .nav-item:hover {
-      background: #2c2c2c;
-      color: #fff;
-    }
-
-    .nav-item.router-link-active {
-      background: #2c2c2c;
-      color: #fff;
-      font-weight: 700;
-    }
+    color: var(--primary-light);
+    background: var(--bg-secondary);
   }
 }
 </style> 

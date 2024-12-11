@@ -1,108 +1,135 @@
 <template>
   <div class="article-page">
-    <div class="page-header">
-      <h1 class="page-title">技术文章</h1>
-      <div class="category-tabs">
-        <button 
-          v-for="cat in categories" 
-          :key="cat.id"
-          :class="['category-btn', { active: currentCategory === cat.id }]"
-          @click="currentCategory = cat.id"
-        >
-          <i :class="cat.icon"></i>
-          {{ cat.name }}
-        </button>
-      </div>
-    </div>
-
-    <div class="search-bar">
-      <input 
-        type="text" 
-        v-model="searchQuery" 
-        placeholder="搜索文章..."
-        class="search-input"
-      >
-      <div class="filter-tags">
-        <span 
-          v-for="tag in selectedTags" 
-          :key="tag"
-          class="filter-tag"
-          @click="removeTag(tag)"
-        >
-          {{ tag }} ×
-        </span>
-      </div>
-    </div>
-
-    <div class="article-grid">
-      <div v-for="article in filteredArticles" :key="article.id" class="article-card">
-        <div class="article-image">
-          <img :src="article.cover" :alt="article.title">
-          <div class="article-category">{{ getCategoryName(article.categoryId) }}</div>
+    <div v-if="isArticleDetail" class="article-detail">
+      <article class="article-content">
+        <h1>{{ currentArticle.title }}</h1>
+        <div class="article-meta">
+          <span class="date"><i class="far fa-calendar"></i> {{ currentArticle.date }}</span>
+          <span class="read-time"><i class="far fa-clock"></i> {{ currentArticle.readTime }}分钟阅读</span>
+          <span class="views"><i class="far fa-eye"></i> {{ currentArticle.views }}阅读</span>
         </div>
-        <div class="article-content">
-          <h2 class="article-title">{{ article.title }}</h2>
-          <p class="article-meta">
-            <span class="date"><i class="far fa-calendar"></i> {{ article.date }}</span>
-            <span class="read-time"><i class="far fa-clock"></i> {{ article.readTime }}分钟阅读</span>
-            <span class="views"><i class="far fa-eye"></i> {{ article.views }}阅读</span>
-          </p>
-          <p class="article-excerpt">{{ article.excerpt }}</p>
-          <div class="article-tags">
-            <span 
-              v-for="tag in article.tags" 
-              :key="tag" 
-              class="tag"
-              @click="addTag(tag)"
-            >
-              {{ tag }}
-            </span>
+        <div class="article-tags">
+          <span v-for="tag in currentArticle.tags" :key="tag" class="tag">{{ tag }}</span>
+        </div>
+        <div class="article-body">
+          <!-- 文章内容将在这里渲染 -->
+          {{ currentArticle.content }}
+        </div>
+      </article>
+      <TableOfContents :isDarkMode="isDarkMode" />
+    </div>
+    <div v-else>
+      <div class="page-header">
+        <h1 class="page-title">技术文章</h1>
+        <div class="category-tabs">
+          <button 
+            v-for="cat in categories" 
+            :key="cat.id"
+            :class="['category-btn', { active: currentCategory === cat.id }]"
+            @click="currentCategory = cat.id"
+          >
+            <i :class="cat.icon"></i>
+            {{ cat.name }}
+          </button>
+        </div>
+      </div>
+
+      <div class="search-bar">
+        <input 
+          type="text" 
+          v-model="searchQuery" 
+          placeholder="搜索文章..."
+          class="search-input"
+        >
+        <div class="filter-tags">
+          <span 
+            v-for="tag in selectedTags" 
+            :key="tag"
+            class="filter-tag"
+            @click="removeTag(tag)"
+          >
+            {{ tag }} ×
+          </span>
+        </div>
+      </div>
+
+      <div class="article-grid">
+        <div v-for="article in filteredArticles" :key="article.id" class="article-card">
+          <div class="article-image">
+            <img :src="article.cover" :alt="article.title">
+            <div class="article-category">{{ getCategoryName(article.categoryId) }}</div>
           </div>
-          <div class="article-footer">
-            <button class="read-more" @click="readArticle(article.id)">
-              阅读全文
-              <i class="fas fa-arrow-right"></i>
-            </button>
-            <div class="article-actions">
-              <button class="action-btn like" :class="{ active: article.isLiked }" @click="toggleLike(article)">
-                <i class="far fa-heart"></i>
-                <span>{{ article.likes }}</span>
+          <div class="article-content">
+            <h2 class="article-title">{{ article.title }}</h2>
+            <p class="article-meta">
+              <span class="date"><i class="far fa-calendar"></i> {{ article.date }}</span>
+              <span class="read-time"><i class="far fa-clock"></i> {{ article.readTime }}分钟阅读</span>
+              <span class="views"><i class="far fa-eye"></i> {{ article.views }}阅读</span>
+            </p>
+            <p class="article-excerpt">{{ article.excerpt }}</p>
+            <div class="article-tags">
+              <span 
+                v-for="tag in article.tags" 
+                :key="tag" 
+                class="tag"
+                @click="addTag(tag)"
+              >
+                {{ tag }}
+              </span>
+            </div>
+            <div class="article-footer">
+              <button class="read-more" @click="readArticle(article.id)">
+                阅读全文
+                <i class="fas fa-arrow-right"></i>
               </button>
-              <button class="action-btn comment">
-                <i class="far fa-comment"></i>
-                <span>{{ article.comments }}</span>
-              </button>
+              <div class="article-actions">
+                <button class="action-btn like" :class="{ active: article.isLiked }" @click="toggleLike(article)">
+                  <i class="far fa-heart"></i>
+                  <span>{{ article.likes }}</span>
+                </button>
+                <button class="action-btn comment">
+                  <i class="far fa-comment"></i>
+                  <span>{{ article.comments }}</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="pagination">
-      <button 
-        :disabled="currentPage === 1" 
-        @click="currentPage--"
-        class="page-btn"
-      >
-        <i class="fas fa-chevron-left"></i> 上一页
-      </button>
-      <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
-      <button 
-        :disabled="currentPage === totalPages" 
-        @click="currentPage++"
-        class="page-btn"
-      >
-        下一页 <i class="fas fa-chevron-right"></i>
-      </button>
+      <div class="pagination">
+        <button 
+          :disabled="currentPage === 1" 
+          @click="currentPage--"
+          class="page-btn"
+        >
+          <i class="fas fa-chevron-left"></i> 上一页
+        </button>
+        <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
+        <button 
+          :disabled="currentPage === totalPages" 
+          @click="currentPage++"
+          class="page-btn"
+        >
+          下一页 <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import TableOfContents from '@/components/TableOfContents.vue'
+
 export default {
   name: 'ArticlePage',
+  components: {
+    TableOfContents
+  },
   data() {
     return {
+      isDarkMode: false,
+      currentArticle: null,
       currentCategory: 'all',
       searchQuery: '',
       selectedTags: [],
@@ -133,7 +160,7 @@ export default {
         {
           id: 2,
           title: 'Node.js 性能优化实践',
-          excerpt: '探索 Node.js 应用性能优化的各种技巧，包括内存管理、异步操作优化、缓存策略等...',
+          excerpt: '探索 Node.js 应用性能优化的各种技巧，包括内存管理、异步操作优化、缓��策略等...',
           date: '2024-03-18',
           readTime: 12,
           views: 856,
@@ -149,6 +176,9 @@ export default {
     }
   },
   computed: {
+    isArticleDetail() {
+      return this.$route.params.id !== undefined
+    },
     filteredArticles() {
       let result = this.articles
 
@@ -179,7 +209,37 @@ export default {
       return Math.ceil(this.filteredArticles.length / this.pageSize)
     }
   },
+  watch: {
+    '$route': {
+      immediate: true,
+      handler(to) {
+        if (to.params.id) {
+          this.loadArticle(to.params.id)
+        }
+      }
+    }
+  },
   methods: {
+    async loadArticle(id) {
+      // 模拟从后端加载文章数据
+      const article = this.articles.find(a => a.id === parseInt(id))
+      if (article) {
+        // 模拟文章内容
+        article.content = `
+          <h2>引言</h2>
+          <p>这是一段示例文章内容...</p>
+          <h2>第一部分</h2>
+          <p>详细内容...</p>
+          <h3>1.1 小节</h3>
+          <p>更多内容...</p>
+          <h2>第二部分</h2>
+          <p>继续讲解...</p>
+          <h3>2.1 小节</h3>
+          <p>深入探讨...</p>
+        `
+        this.currentArticle = article
+      }
+    },
     getCategoryName(id) {
       const category = this.categories.find(cat => cat.id === id)
       return category ? category.name : ''
@@ -522,6 +582,65 @@ export default {
   
   .article-meta {
     flex-wrap: wrap;
+  }
+}
+
+.article-detail {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.article-content {
+  background: var(--bg-primary);
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: var(--card-shadow);
+}
+
+.article-content h1 {
+  font-size: 2.5em;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+
+.article-meta {
+  display: flex;
+  gap: 20px;
+  color: var(--text-light);
+  margin-bottom: 20px;
+}
+
+.article-body {
+  color: var(--text-primary);
+  line-height: 1.8;
+  margin-top: 30px;
+}
+
+.article-body h2 {
+  font-size: 1.8em;
+  margin: 40px 0 20px;
+  color: var(--text-primary);
+}
+
+.article-body h3 {
+  font-size: 1.4em;
+  margin: 30px 0 15px;
+  color: var(--text-primary);
+}
+
+.article-body p {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 1280px) {
+  .article-detail {
+    padding: 20px;
+  }
+  
+  .article-content {
+    padding: 20px;
   }
 }
 </style> 

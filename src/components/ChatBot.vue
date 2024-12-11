@@ -211,7 +211,7 @@ export default {
       if (!this.$refs.chatWindow) return
 
       const rect = this.$refs.chatWindow.getBoundingClientRect()
-      const padding = 10 // 距���边界的最小距离
+      const padding = 10 // 距边界的最小距离
 
       // 如果窗口超出右边界
       if (rect.right > this.windowWidth - padding) {
@@ -355,21 +355,19 @@ export default {
 <style scoped>
 .chat-icon {
   position: fixed;
-  right: 30px;
-  bottom: 30px;
-  width: 60px;
-  height: 60px;
-  background: white;
+  right: 40px;
+  bottom: 160px;
+  width: 40px;
+  height: 40px;
+  background: var(--primary-color);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  padding: 10px;
 }
 
 .chat-icon:hover {
@@ -629,5 +627,12 @@ export default {
   animation: pulse 1s ease infinite;
   opacity: 0.98;
   cursor: move !important;
+}
+
+@media (max-width: 768px) {
+  .chat-icon {
+    right: 20px;
+    bottom: 140px;
+  }
 }
 </style> 

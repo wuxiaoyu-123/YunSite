@@ -39,4 +39,39 @@
   --carousel-text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   --carousel-control-bg: rgba(255, 255, 255, 0.9);
   --carousel-indicator-bg: rgba(255, 255, 255, 0.3);
+
+  /* 过渡动画 */
+  --transition-normal: all 0.3s ease;
+  --transition-slow: all 0.5s ease;
+}
+
+/* 深色模式 */
+.dark-theme {
+  /* 主色调 */
+  --primary-color: #4285f4;
+  --primary-light: #5c9fff;
+  --primary-dark: #2962ff;
+  
+  /* 中性色 */
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --text-light: #bdbdbd;
+  
+  /* 背景色 */
+  --bg-primary: #121212;
+  --bg-secondary: #1e1e1e;
+  --bg-gradient: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  
+  /* 卡片阴影 */
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  --hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  
+  /* 轮播图相关 */
+  --carousel-overlay: rgba(0, 0, 0, 0.6);
+  --carousel-control-bg: rgba(255, 255, 255, 0.15);
+}
+
+/* 全局过渡效果 */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 } 

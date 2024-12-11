@@ -1,13 +1,17 @@
 <template>
   <div class="home-page">
-    <div class="welcome-section">
-      <h1 class="title">欢迎来到我的博客园</h1>
-      <p class="subtitle">分享技术，记录生活</p>
+    <div class="intro-banner">
+      <div class="intro-text">
+        <p>热爱技术，专注分享</p>
+        <p>记录学习，探索创新</p>
+        <p>前端开发工程师 / 技术博主</p>
+      </div>
     </div>
+
     <image-carousel :items="carouselItems" />
     
     <div class="featured-section">
-      <h2 class="section-title">精选内容</h2>
+      <h2 class="section-title">最新动态</h2>
       <div class="featured-grid">
         <div v-for="item in featuredItems" :key="item.id" class="featured-card">
           <div class="card-icon">
@@ -17,7 +21,7 @@
           <p>{{ item.description }}</p>
           <router-link :to="item.link" class="read-more">
             了解更多
-            <i class="fas fa-arrow-right"></i>
+            <i class="el-icon-arrow-right"></i>
           </router-link>
         </div>
       </div>
@@ -67,23 +71,23 @@ export default {
       featuredItems: [
         {
           id: 1,
-          icon: 'fas fa-code',
+          icon: 'el-icon-edit-outline',
           title: '最新技术博文',
-          description: '探索前端开发的最新趋势和技术实践',
+          description: '探索Vue3新特性，掌握前端开发的最新趋势',
           link: '/articles'
         },
         {
           id: 2,
-          icon: 'fas fa-project-diagram',
+          icon: 'el-icon-monitor',
           title: '项目展示',
-          description: '查看我的开源项目和实践案例',
+          description: '基于微服务架构的企业级应用实践分享',
           link: '/projects'
         },
         {
           id: 3,
-          icon: 'fas fa-book',
+          icon: 'el-icon-notebook-2',
           title: '学习笔记',
-          description: '分享学习过程中的心得体会',
+          description: '系统化的前端学习路线和知识整理',
           link: '/notes'
         }
       ]
@@ -97,39 +101,42 @@ export default {
   animation: fadeIn 1s ease-out;
 }
 
-.welcome-section {
-  text-align: center;
-  margin-bottom: 40px;
-  padding: 40px 0;
+.intro-banner {
+  background: var(--bg-gradient);
+  padding: 30px;
+  margin: 20px;
+  border-radius: 10px;
+  box-shadow: var(--card-shadow);
 }
 
-.title {
-  font-size: 2.8em;
-  margin-bottom: 15px;
-  color: var(--primary-color);
-  font-weight: bold;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+.intro-text {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 20px;
 }
 
-.subtitle {
-  font-size: 1.4em;
-  color: var(--text-secondary);
-  margin-bottom: 30px;
-  font-weight: 500;
+.intro-text p {
+  font-size: 1.2em;
+  color: var(--text-primary);
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
 }
 
 .featured-section {
-  padding: 60px 0;
-  background: var(--bg-secondary);
-  border-radius: 20px;
-  margin: 40px 0;
+  padding: 40px 20px;
+  margin: 20px 0;
 }
 
 .section-title {
   text-align: center;
-  color: var(--text-primary);
-  margin-bottom: 40px;
   font-size: 2em;
+  color: var(--text-primary);
+  margin-bottom: 30px;
 }
 
 .featured-grid {
@@ -145,7 +152,6 @@ export default {
   border-radius: 15px;
   box-shadow: var(--card-shadow);
   transition: all 0.3s ease;
-  text-align: center;
 }
 
 .featured-card:hover {
@@ -162,10 +168,11 @@ export default {
 .featured-card h3 {
   color: var(--text-primary);
   margin-bottom: 15px;
+  font-size: 1.5em;
 }
 
 .featured-card p {
-  color: var(--text-light);
+  color: var(--text-secondary);
   margin-bottom: 20px;
   line-height: 1.6;
 }
@@ -188,10 +195,10 @@ export default {
 .stats-section {
   display: flex;
   justify-content: space-around;
-  padding: 60px 0;
+  padding: 40px 20px;
   background: white;
-  border-radius: 20px;
-  margin: 40px 0;
+  border-radius: 10px;
+  margin: 20px;
   box-shadow: var(--card-shadow);
 }
 
@@ -207,7 +214,7 @@ export default {
 }
 
 .stat-label {
-  color: var(--text-light);
+  color: var(--text-secondary);
   font-size: 1.1em;
 }
 
@@ -217,13 +224,19 @@ export default {
 }
 
 @media (max-width: 768px) {
+  .intro-text {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .intro-text p {
+    width: 100%;
+    text-align: center;
+  }
+
   .stats-section {
     flex-direction: column;
     gap: 30px;
-  }
-  
-  .featured-grid {
-    grid-template-columns: 1fr;
   }
 }
 </style> 
