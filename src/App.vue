@@ -87,6 +87,7 @@ export default {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: var(--bg-secondary);
 }
 
 .header {
@@ -95,9 +96,9 @@ export default {
   left: 0;
   right: 0;
   height: var(--header-height);
-  background: var(--bg-primary);
+  background: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  z-index: 100;
+  z-index: 1000;
 }
 
 .header-content {
@@ -108,11 +109,13 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 }
 
 .logo {
   font-size: 1.5em;
   font-weight: bold;
+  z-index: 1001;
 }
 
 .logo a {
@@ -131,6 +134,7 @@ export default {
   color: var(--primary-color);
   cursor: pointer;
   padding: 8px;
+  z-index: 1001;
 }
 
 .nav-menu {
@@ -164,7 +168,8 @@ export default {
   margin-top: var(--header-height);
   flex: 1;
   padding: 20px;
-  background: var(--bg-secondary);
+  position: relative;
+  z-index: 1;
 }
 
 /* 移动端适配 */
@@ -172,7 +177,6 @@ export default {
   .header {
     height: var(--mobile-header-height);
     background: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
 
   .main-content {
@@ -200,7 +204,7 @@ export default {
     gap: 15px;
     transform: translateX(100%);
     transition: transform 0.3s ease;
-    z-index: 99;
+    z-index: 999;
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
   }

@@ -53,27 +53,15 @@ export default {
       carouselItems: [
         {
           image: 'https://picsum.photos/1200/500?random=1',
-          title: 'Vue.js 开发实战'
+          title: '前端开发技术探索'
         },
         {
           image: 'https://picsum.photos/1200/500?random=2',
-          title: 'React 最佳实践'
+          title: '全栈工程师成长之路'
         },
         {
           image: 'https://picsum.photos/1200/500?random=3',
-          title: 'Node.js 服务端开发'
-        },
-        {
-          image: 'https://picsum.photos/1200/500?random=4',
-          title: '前端性能优化技巧'
-        },
-        {
-          image: 'https://picsum.photos/1200/500?random=5',
-          title: 'TypeScript 实战指南'
-        },
-        {
-          image: 'https://picsum.photos/1200/500?random=6',
-          title: '微前端架构探索'
+          title: '云原生技术实践'
         }
       ],
       featuredItems: [
@@ -118,16 +106,16 @@ export default {
 .title {
   font-size: 2.8em;
   margin-bottom: 15px;
-  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--primary-color);
+  font-weight: bold;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
 }
 
 .subtitle {
   font-size: 1.4em;
-  color: var(--text-light);
+  color: var(--text-secondary);
   margin-bottom: 30px;
+  font-weight: 500;
 }
 
 .featured-section {

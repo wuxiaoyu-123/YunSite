@@ -41,32 +41,23 @@
 <script>
 export default {
   name: 'ImageCarousel',
+  props: {
+    items: {
+      type: Array,
+      required: true
+    }
+  },
   data() {
     return {
       currentIndex: 0,
       timer: null,
-      isTransitioning: false,
-      carouselItems: [
-        {
-          title: '风景图片1',
-          image: 'https://picsum.photos/1200/500?random=1'
-        },
-        {
-          title: '风景图片2',
-          image: 'https://picsum.photos/1200/500?random=2'
-        },
-        {
-          title: '风景图片3',
-          image: 'https://picsum.photos/1200/500?random=3'
-        },
-        {
-          title: '风景图片4',
-          image: 'https://picsum.photos/1200/500?random=4'
-        }
-      ]
+      isTransitioning: false
     }
   },
   computed: {
+    carouselItems() {
+      return this.items
+    },
     containerStyle() {
       return {
         transform: `translateX(-${this.currentIndex * 100}%)`,
