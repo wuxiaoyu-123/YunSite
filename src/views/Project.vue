@@ -1,20 +1,18 @@
 <template>
   <div class="project-page">
-    <h1 class="page-title">项目展示</h1>
     <div class="project-grid">
       <div v-for="project in projects" :key="project.id" class="project-card">
-        <img :src="project.image" :alt="project.title" class="project-image">
+        <div class="project-icon">
+          <i :class="project.icon"></i>
+        </div>
         <div class="project-info">
-          <h2>{{ project.title }}</h2>
-          <p class="project-desc">{{ project.description }}</p>
-          <div class="project-tech">
-            <span v-for="tech in project.technologies" 
-                  :key="tech" 
-                  class="tech-tag">{{ tech }}</span>
-          </div>
+          <h3>{{ project.title }}</h3>
+          <p>{{ project.description }}</p>
           <div class="project-links">
-            <a :href="project.demo" target="_blank" class="project-link">演示</a>
-            <a :href="project.github" target="_blank" class="project-link">GitHub</a>
+            <a :href="project.url" target="_blank" class="project-link">
+              <i class="el-icon-link"></i>
+              访问
+            </a>
           </div>
         </div>
       </div>
@@ -30,14 +28,88 @@ export default {
       projects: [
         {
           id: 1,
-          title: '个人博客系统',
-          description: '基于Vue3和Node.js的全���博客系统',
-          image: 'https://picsum.photos/400/300?random=1',
-          technologies: ['Vue3', 'Node.js', 'MongoDB'],
-          demo: '#',
-          github: '#'
+          title: '小站',
+          description: '一个简单的导航页，收集一些常用的网站。',
+          icon: 'el-icon-house',
+          url: '#'
         },
-        // 更多项目...
+        {
+          id: 2,
+          title: '云盘',
+          description: '基于 NextCloud 搭建的私人云盘，用于文件存储和同步。',
+          icon: 'el-icon-folder',
+          url: '#'
+        },
+        {
+          id: 3,
+          title: '音乐',
+          description: '使用 Navidrome 搭建的私人音乐服务器。',
+          icon: 'el-icon-headset',
+          url: '#'
+        },
+        {
+          id: 4,
+          title: '实验室',
+          description: '一些有趣的实验性项目和演示。',
+          icon: 'el-icon-data-analysis',
+          url: '#'
+        },
+        {
+          id: 5,
+          title: '网盘',
+          description: '基于 Alist 搭建的网盘聚合服务。',
+          icon: 'el-icon-folder-opened',
+          url: '#'
+        },
+        {
+          id: 6,
+          title: 'RSS',
+          description: '使用 Tiny Tiny RSS 搭建的 RSS 阅读器。',
+          icon: 'el-icon-reading',
+          url: '#'
+        },
+        {
+          id: 7,
+          title: '相册',
+          description: '基于 Lychee 搭建的个人相册。',
+          icon: 'el-icon-picture',
+          url: '#'
+        },
+        {
+          id: 8,
+          title: '笔记',
+          description: '使用 Joplin 搭建的个人笔记系统。',
+          icon: 'el-icon-notebook-1',
+          url: '#'
+        },
+        {
+          id: 9,
+          title: '监控',
+          description: '使用 Uptime Kuma 搭建的服务监控系统。',
+          icon: 'el-icon-monitor',
+          url: '#'
+        },
+        {
+          id: 10,
+          title: '书签',
+          description: '基于 Shiori 搭建的个人书签管理系统。',
+          icon: 'el-icon-collection-tag',
+          url: '#'
+        },
+        {
+          id: 11,
+          title: '代码',
+          description: '使用 Gitea 搭建的私有代码仓库。',
+          icon: 'el-icon-document',
+          url: '#'
+        },
+        {
+          id: 12,
+          title: '下载',
+          description: '基于 Aria2 搭建的下载服务器。',
+          icon: 'el-icon-download',
+          url: '#'
+        }
       ]
     }
   }
@@ -47,50 +119,61 @@ export default {
 <style scoped>
 .project-page {
   padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: calc(100vh - 60px);
 }
 
 .project-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
-  margin-top: 20px;
+  padding: 20px;
 }
 
 .project-card {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
+  background: var(--bg-primary);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: var(--card-shadow);
+  transition: var(--transition-normal);
 }
 
 .project-card:hover {
   transform: translateY(-5px);
+  box-shadow: var(--hover-shadow);
 }
 
-.project-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
+.project-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  background: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
 }
 
 .project-info {
-  padding: 20px;
+  flex: 1;
 }
 
-.project-tech {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 15px 0;
+.project-info h3 {
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
+  font-size: 1.1em;
 }
 
-.tech-tag {
-  background: #e3f2fd;
-  color: #1976d2;
-  padding: 4px 12px;
-  border-radius: 15px;
+.project-info p {
+  margin: 0 0 12px 0;
+  color: var(--text-secondary);
   font-size: 0.9em;
+  line-height: 1.4;
 }
 
 .project-links {
@@ -99,15 +182,27 @@ export default {
 }
 
 .project-link {
-  padding: 8px 16px;
-  background: #3498db;
-  color: white;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 15px;
+  background: var(--bg-secondary);
+  color: var(--primary-color);
   text-decoration: none;
-  border-radius: 4px;
-  transition: background 0.3s ease;
+  font-size: 0.9em;
+  transition: var(--transition-normal);
 }
 
 .project-link:hover {
-  background: #2980b9;
+  background: var(--primary-color);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .project-grid {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
 }
 </style> 

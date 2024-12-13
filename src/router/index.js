@@ -7,6 +7,7 @@ import NotePage from '@/views/Note.vue'
 import AboutPage from '@/views/About.vue'
 import LinksPage from '@/views/Links.vue'
 import TimelinePage from '@/views/Timeline.vue'
+import InterestPage from '@/views/Interest.vue'
 
 Vue.use(VueRouter)
 
@@ -50,6 +51,11 @@ const routes = [
     path: '/timeline',
     name: 'TimelinePage',
     component: TimelinePage
+  },
+  {
+    path: '/interest',
+    name: 'InterestPage',
+    component: InterestPage
   }
 ]
 

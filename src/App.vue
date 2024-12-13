@@ -89,6 +89,11 @@ export default {
           icon: 'el-icon-notebook-1'
         },
         {
+          path: '/interest',
+          name: '兴趣',
+          icon: 'el-icon-star-off'
+        },
+        {
           path: '/links',
           name: '友链',
           icon: 'el-icon-link'
